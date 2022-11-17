@@ -28,7 +28,7 @@ public:
     int getMandates() const;
     void step(Simulation &s);
     const string &getName() const;
-    const bool hasOffer(int agentId) const;
+    bool hasOffer(int agentId) const;
     void offer(int agentId);
 
 private:

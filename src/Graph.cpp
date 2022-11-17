@@ -15,7 +15,7 @@ int Graph::getEdgeWeight(int v1, int v2) const
     return mEdges[v1][v2];
 }
 
-const std::vector<int> Graph::GetNeighbors(int partyId) const
+std::vector<int> Graph::getNeighbors(int partyId) const
 {
     vector<int> neighbors;
     for (unsigned int i = 0; i < mEdges[partyId].size(); ++i) {
@@ -36,9 +36,9 @@ const Party &Graph::getParty(int partyId) const
     return mVertices[partyId];
 }
 
-void Graph::step(Simulation &s)
+void Graph::step(Simulation& s)
 {
-    for (Party &party : mVertices) {
+    for (Party& party : mVertices) {
         party.step(s);
     }
 }
@@ -48,7 +48,7 @@ void Graph::offerParty(int partyId, int agentId) {
 }
 
 bool Graph::hasAllJoined() const {
-    for (const Party &party : mVertices) {
+    for (const Party& party : mVertices) {
         if (party.getState() != State::Joined) {
             return false;
         }

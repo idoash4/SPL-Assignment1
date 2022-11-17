@@ -75,21 +75,22 @@ void Party::step(Simulation &s)
 {
     switch (mState) {
         case State::Waiting:
-            return;
+        case State::Joined:
+            break; // We don't need to do anything in Waiting and Joined states
         case State::CollectingOffers:
             if (mStepsTimer == Party::MAX_STEPS_TIMER) {
+                // We reached the end of the timer, time to choose an offer
                 int selected_agent_id = mJoinPolicy->select(s, mAgentIdOffers);
-                s.addPartyToCoalition(mId, selected_agent_id);
+                s.acceptAgentOffer(mId, selected_agent_id);
                 mState=State::Joined;
             } else {
+                // Increase the timer by 1
                 mStepsTimer++;
             }
-        case State::Joined:
-            return;
     }
 }
 
-const bool Party::hasOffer(int agentId) const {
+bool Party::hasOffer(int agentId) const {
     return std::find(mAgentIdOffers.begin(), mAgentIdOffers.end(), agentId) != mAgentIdOffers.end();
 }
 

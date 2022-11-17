@@ -52,7 +52,7 @@ const Coalition& Simulation::getCoalitionByAgent(int agentId) const
     throw std::invalid_argument("Received invalid agent id (not in coalition)");
 }
 
-void Simulation::addPartyToCoalition(int partyId, int agentId)
+void Simulation::acceptAgentOffer(int partyId, int agentId)
 {
     const Coalition& coalition = getCoalitionByAgent(agentId);
     mCoalitions[coalition.getCoalitionId()].addParty(partyId);
