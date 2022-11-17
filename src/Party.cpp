@@ -51,6 +51,10 @@ Party& Party::operator=(Party &&other)
     return *this;
 }
 
+int Party::getId() const {
+    return mId;
+}
+
 State Party::getState() const
 {
     return mState;

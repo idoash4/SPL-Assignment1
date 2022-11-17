@@ -23,6 +23,7 @@ public:
     Party& operator=(const Party& other);
     Party(Party&& other) noexcept;
     Party& operator=(Party&& other);
+    int getId() const;
     State getState() const;
     void setState(State state);
     int getMandates() const;

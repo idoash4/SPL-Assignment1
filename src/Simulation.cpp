@@ -5,7 +5,7 @@
 Simulation::Simulation(Graph graph, vector<Agent> agents) : mGraph(graph), mAgents(agents), mCoalitions()
 {
     for (unsigned int i = 0; i < agents.size(); ++i) {
-        mCoalitions.emplace_back(i, agents[i].getPartyId(), agents[i].getId());
+        mCoalitions.emplace_back(i, getParty(agents[i].getPartyId()), agents[i].getId());
     }
 }
 
@@ -20,7 +20,7 @@ void Simulation::step()
 bool Simulation::shouldTerminate() const
 {
     for (const Coalition &coalition : mCoalitions) {
-        if (coalition.getMandates(const_cast<Simulation &>(*this)) >= MANDATES_NEEDED) {
+        if (coalition.getMandates() >= MANDATES_NEEDED) {
             return true;
         }
     }
@@ -50,7 +50,7 @@ const Coalition& Simulation::getCoalition(int coalitionId) const
 void Simulation::acceptCoalitionOffer(int partyId, int coalitionId)
 {
     const Coalition& coalition = getCoalition(coalitionId);
-    mCoalitions[coalition.getCoalitionId()].addParty(partyId);
+    mCoalitions[coalition.getCoalitionId()].addParty(getParty(partyId));
     int newAgentId = mAgents.size();
     mAgents.emplace_back(newAgentId, partyId, mAgents[coalition.getOriginalAgentId()].getSelectionPolicy().clone());
 }

@@ -2,9 +2,9 @@
 #include "Simulation.h"
 #include <algorithm>
 
-Coalition::Coalition(int id, int partyId, int agentId) : mCoalitionId(id), mPartiesId(), mOriginalAgentId(agentId)
+Coalition::Coalition(int id, const Party& party, int agentId) : mCoalitionId(id), mPartiesId(), mOriginalAgentId(agentId), mMandates(party.getMandates())
 {
-    mPartiesId.push_back(partyId);
+    mPartiesId.push_back(party.getId());
 }
 
 int Coalition::getCoalitionId() const
@@ -12,18 +12,15 @@ int Coalition::getCoalitionId() const
     return mCoalitionId;
 }
 
-int Coalition::getMandates(Simulation &s) const
+int Coalition::getMandates() const
 {
-    int mandates = 0;
-    for (int partyId : mPartiesId) {
-        mandates += s.getParty(partyId).getMandates();
-    }
-    return mandates;
+    return mMandates;
 }
 
-void Coalition::addParty(int partyId)
+void Coalition::addParty(const Party& party)
 {
-    mPartiesId.push_back(partyId);
+    mPartiesId.push_back(party.getId());
+    mMandates += party.getMandates();
 }
 
 std::vector<int> Coalition::getParties() const {
