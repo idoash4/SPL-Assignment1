@@ -42,23 +42,17 @@ const Party& Simulation::getParty(int partyId) const
     return mGraph.getParty(partyId);
 }
 
-const Coalition& Simulation::getCoalitionByAgent(int agentId) const
+const Coalition& Simulation::getCoalition(int coalitionId) const
 {
-    for (const Coalition& coalition : mCoalitions) {
-        if (coalition.isAgentInCoalition(agentId)) {
-            return coalition;
-        }
-    }
-    throw std::invalid_argument("Received invalid agent id (not in coalition)");
+    return mCoalitions[coalitionId];
 }
 
-void Simulation::acceptAgentOffer(int partyId, int agentId)
+void Simulation::acceptCoalitionOffer(int partyId, int coalitionId)
 {
-    const Coalition& coalition = getCoalitionByAgent(agentId);
+    const Coalition& coalition = getCoalition(coalitionId);
     mCoalitions[coalition.getCoalitionId()].addParty(partyId);
     int newAgentId = mAgents.size();
-    mAgents.emplace_back(newAgentId, partyId, mAgents[agentId].getSelectionPolicy().clone());
-    mCoalitions[coalition.getCoalitionId()].addAgent(newAgentId);
+    mAgents.emplace_back(newAgentId, partyId, mAgents[coalition.getOriginalAgentId()].getSelectionPolicy().clone());
 }
 
 /// This method returns a "coalition" vector, where each element is a vector of party IDs in the coalition.
@@ -72,6 +66,15 @@ const vector<vector<int>> Simulation::getPartiesByCoalitions() const
     return coalitions;
 }
 
-void Simulation::offerParty(int partyId, int agentId) {
-    mGraph.offerParty(partyId, agentId);
+void Simulation::offerParty(int partyId, int coalitionId) {
+    mGraph.offerParty(partyId, coalitionId);
+}
+
+const Coalition &Simulation::getCoalitionByParty(int partyId) const {
+    for (const Coalition& coalition : mCoalitions) {
+        if (coalition.isPartyInCoalition(partyId)) {
+            return coalition;
+            }
+        }
+    throw std::invalid_argument("Received invalid party id (not in coalition)");
 }

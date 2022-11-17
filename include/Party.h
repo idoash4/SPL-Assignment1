@@ -28,8 +28,8 @@ public:
     int getMandates() const;
     void step(Simulation &s);
     const string &getName() const;
-    bool hasOffer(int agentId) const;
-    void offer(int agentId);
+    bool hasOffer(int coalitionId) const;
+    void offer(int coalitionId);
 
 private:
     int mId;
@@ -38,6 +38,6 @@ private:
     State mState;
     int mStepsTimer;
     static const int MAX_STEPS_TIMER = 3;
-    std::vector<int> mAgentIdOffers;
+    std::vector<int> mCoalitionOffers;
     JoinPolicy *mJoinPolicy;
 };

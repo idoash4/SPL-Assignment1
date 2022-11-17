@@ -2,18 +2,17 @@
 #include "Simulation.h"
 #include <algorithm>
 
-Coalition::Coalition(int id, int partyId, int agentId) : mCoalitionId(id), mPartiesId(), mAgentsId()
+Coalition::Coalition(int id, int partyId, int agentId) : mCoalitionId(id), mPartiesId(), mOriginalAgentId(agentId)
 {
     mPartiesId.push_back(partyId);
-    mAgentsId.push_back(agentId);
 }
 
-int const Coalition::getCoalitionId() const
+int Coalition::getCoalitionId() const
 {
     return mCoalitionId;
 }
 
-const int Coalition::getMandates(Simulation &s) const
+int Coalition::getMandates(Simulation &s) const
 {
     int mandates = 0;
     for (int partyId : mPartiesId) {
@@ -27,16 +26,14 @@ void Coalition::addParty(int partyId)
     mPartiesId.push_back(partyId);
 }
 
-void Coalition::addAgent(int agentId)
-{
-    mAgentsId.push_back(agentId);
-}
-
-const bool Coalition::isAgentInCoalition(int agentId) const
-{
-    return std::find(mAgentsId.begin(), mAgentsId.end(), agentId) != mAgentsId.end();
-}
-
-const std::vector<int> Coalition::getParties() const {
+std::vector<int> Coalition::getParties() const {
     return mPartiesId;
+}
+
+int Coalition::getOriginalAgentId() const {
+    return mOriginalAgentId;
+}
+
+bool Coalition::isPartyInCoalition(int partyId) const {
+    return std::find(mPartiesId.begin(), mPartiesId.end(), partyId) != mPartiesId.end();
 }

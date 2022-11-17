@@ -1,25 +1,25 @@
 #include "JoinPolicy.h"
 #include "Simulation.h"
 
-int MandatesJoinPolicy::select(Simulation &s, const std::vector<int>& agentIdOffers) {
+int MandatesJoinPolicy::select(Simulation &s, const std::vector<int>& coalitionIdOffers) {
     int maxMandate = 0;
-    int maxAgentMandateOffer = -1;
-    for (int agentId : agentIdOffers) {
-        const Coalition& coalition = s.getCoalitionByAgent(agentId);
+    int maxCoalitionIdMandateOffer = -1;
+    for (int coalitionId : coalitionIdOffers) {
+        const Coalition& coalition = s.getCoalition(coalitionId);
         if (maxMandate < coalition.getMandates(s)) {
             maxMandate = coalition.getMandates(s);
-            maxAgentMandateOffer = agentId;
+            maxCoalitionIdMandateOffer = coalitionId;
         }
     }
-    return maxAgentMandateOffer;
+    return maxCoalitionIdMandateOffer;
 }
 
 MandatesJoinPolicy *MandatesJoinPolicy::clone() const {
     return new MandatesJoinPolicy(*this);
 }
 
-int LastOfferJoinPolicy::select(Simulation &s, const std::vector<int>& agentIdOffers) {
-    return agentIdOffers.back();
+int LastOfferJoinPolicy::select(Simulation &s, const std::vector<int>& coalitionIdOffers) {
+    return coalitionIdOffers.back();
 }
 
 LastOfferJoinPolicy *LastOfferJoinPolicy::clone() const{

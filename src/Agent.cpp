@@ -52,15 +52,15 @@ int Agent::getPartyId() const
 void Agent::step(Simulation &sim)
 {
     vector<int> partiesWithoutOffer;
+    const Coalition& coalition = sim.getCoalitionByParty(mPartyId);
     for (int partyId : sim.getGraph().getNeighbors(mPartyId)) {
         const Party& party = sim.getParty(partyId);
-        // TODO: The check should be for hasOffer for coalition not just an agent
-        if (!party.hasOffer(mAgentId) and party.getState() != State::Joined) {
+        if (!party.hasOffer(coalition.getCoalitionId()) and party.getState() != State::Joined) {
             partiesWithoutOffer.push_back(partyId);
         }
     }
     if(!partiesWithoutOffer.empty()) {
-        sim.offerParty(mSelectionPolicy->select(sim, mPartyId, partiesWithoutOffer), mAgentId);
+        sim.offerParty(mSelectionPolicy->select(sim, mPartyId, partiesWithoutOffer), coalition.getCoalitionId());
     }
 }
 

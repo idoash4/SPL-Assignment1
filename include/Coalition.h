@@ -6,15 +6,15 @@ class Simulation;
 class Coalition {
 public:
     Coalition(int id, int partyId, int agentId);
-    const int getCoalitionId() const;
-    void addAgent(int agentId);
+    int getCoalitionId() const;
     void addParty(int partyId);
-    const bool isAgentInCoalition(int agentId) const;
-    const int getMandates(Simulation &s) const;
-    const std::vector<int> getParties() const;
+    int getMandates(Simulation &s) const;
+    int getOriginalAgentId() const;
+    std::vector<int> getParties() const;
+    bool isPartyInCoalition(int partyId) const;
 
 private:
     int mCoalitionId;
     std::vector<int> mPartiesId;
-    std::vector<int> mAgentsId;
+    int mOriginalAgentId;
 };

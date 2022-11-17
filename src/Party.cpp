@@ -2,7 +2,7 @@
 #include "JoinPolicy.h"
 #include <algorithm>
 
-Party::Party(int id, string name, int mandates, JoinPolicy *jp) : mId(id), mName(name), mMandates(mandates), mState(Waiting), mStepsTimer(0), mAgentIdOffers(), mJoinPolicy(jp)
+Party::Party(int id, string name, int mandates, JoinPolicy *jp) : mId(id), mName(name), mMandates(mandates), mState(Waiting), mStepsTimer(0), mCoalitionOffers(), mJoinPolicy(jp)
 {
     // You can change the implementation of the constructor, but not the signature!
 }
@@ -12,7 +12,7 @@ Party::~Party()
     delete mJoinPolicy;
 }
 
-Party::Party(const Party &other) : mId(other.mId), mName(other.mName), mMandates(other.mMandates), mState(other.mState), mStepsTimer(other.mStepsTimer), mAgentIdOffers(other.mAgentIdOffers), mJoinPolicy(
+Party::Party(const Party &other) : mId(other.mId), mName(other.mName), mMandates(other.mMandates), mState(other.mState), mStepsTimer(other.mStepsTimer), mCoalitionOffers(other.mCoalitionOffers), mJoinPolicy(
         nullptr)
 {
     this->mJoinPolicy = other.mJoinPolicy->clone();
@@ -26,14 +26,14 @@ Party &Party::operator=(const Party &other)
         this->mMandates = other.mMandates;
         this->mState = other.mState;
         this->mStepsTimer = other.mStepsTimer;
-        this->mAgentIdOffers = other.mAgentIdOffers;
+        this->mCoalitionOffers = other.mCoalitionOffers;
         delete mJoinPolicy;
         this->mJoinPolicy = other.mJoinPolicy->clone();
     }
     return *this;
 }
 
-Party::Party(Party &&other) noexcept : mId(other.mId), mName(other.mName), mMandates(other.mMandates), mState(other.mState), mStepsTimer(other.mStepsTimer), mAgentIdOffers(other.mAgentIdOffers), mJoinPolicy(other.mJoinPolicy)
+Party::Party(Party &&other) noexcept : mId(other.mId), mName(other.mName), mMandates(other.mMandates), mState(other.mState), mStepsTimer(other.mStepsTimer), mCoalitionOffers(other.mCoalitionOffers), mJoinPolicy(other.mJoinPolicy)
 {
     other.mJoinPolicy = nullptr;
 }
@@ -45,7 +45,7 @@ Party& Party::operator=(Party &&other)
     this->mMandates = other.mMandates;
     this->mState = other.mState;
     this->mStepsTimer = other.mStepsTimer;
-    this->mAgentIdOffers = other.mAgentIdOffers;
+    this->mCoalitionOffers = other.mCoalitionOffers;
     delete mJoinPolicy;
     this->mJoinPolicy = other.mJoinPolicy->clone();
     return *this;
@@ -80,8 +80,8 @@ void Party::step(Simulation &s)
         case State::CollectingOffers:
             if (mStepsTimer == Party::MAX_STEPS_TIMER) {
                 // We reached the end of the timer, time to choose an offer
-                int selected_agent_id = mJoinPolicy->select(s, mAgentIdOffers);
-                s.acceptAgentOffer(mId, selected_agent_id);
+                int selected_coalition_id = mJoinPolicy->select(s, mCoalitionOffers);
+                s.acceptCoalitionOffer(mId, selected_coalition_id);
                 mState=State::Joined;
             } else {
                 // Increase the timer by 1
@@ -90,12 +90,12 @@ void Party::step(Simulation &s)
     }
 }
 
-bool Party::hasOffer(int agentId) const {
-    return std::find(mAgentIdOffers.begin(), mAgentIdOffers.end(), agentId) != mAgentIdOffers.end();
+bool Party::hasOffer(int coalitionId) const {
+    return std::find(mCoalitionOffers.begin(), mCoalitionOffers.end(), coalitionId) != mCoalitionOffers.end();
 }
 
-void Party::offer(int agentId) {
-    mAgentIdOffers.push_back(agentId);
+void Party::offer(int coalitionId) {
+    mCoalitionOffers.push_back(coalitionId);
     if (mState == State::Waiting) {
         mState = State::CollectingOffers;
         mStepsTimer++;

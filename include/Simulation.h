@@ -21,9 +21,10 @@ public:
     const vector<Agent> &getAgents() const;
     const Party &getParty(int partyId) const;
     const vector<vector<int>> getPartiesByCoalitions() const;
-    void acceptAgentOffer(int partyId, int coalitionId);
-    const Coalition &getCoalitionByAgent(int agentId) const;
-    void offerParty(int partyId, int agentId);
+    void acceptCoalitionOffer(int partyId, int coalitionId);
+    const Coalition& getCoalition(int coalitionId) const;
+    const Coalition& getCoalitionByParty(int partyId) const;
+    void offerParty(int partyId, int coalitionId);
 
 private:
     Graph mGraph;
