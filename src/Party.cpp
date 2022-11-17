@@ -1,6 +1,8 @@
 #include "Party.h"
+#include "JoinPolicy.h"
+#include <algorithm>
 
-Party::Party(int id, string name, int mandates, JoinPolicy *jp) : mId(id), mName(name), mMandates(mandates), mJoinPolicy(jp), mState(Waiting) 
+Party::Party(int id, string name, int mandates, JoinPolicy *jp) : mId(id), mName(name), mMandates(mandates), mJoinPolicy(jp), mState(Waiting), mStepsTimer(0)
 {
     // You can change the implementation of the constructor, but not the signature!
 }
@@ -27,5 +29,30 @@ const string & Party::getName() const
 
 void Party::step(Simulation &s)
 {
-    // TODO: implement this method
+    switch (mState) {
+        case State::Waiting:
+            return;
+        case State::CollectingOffers:
+            if (mStepsTimer == Party::MAX_STEPS_TIMER) {
+                int selected_agent_id = mJoinPolicy->select(s, mAgentIdOffers);
+                s.addPartyToCoalition(mId, selected_agent_id);
+                mState=State::Joined;
+            } else {
+                mStepsTimer++;
+            }
+        case State::Joined:
+            return;
+    }
+}
+
+const bool Party::hasOffer(int agentId) const {
+    return std::find(mAgentIdOffers.begin(), mAgentIdOffers.end(), agentId) != mAgentIdOffers.end();
+}
+
+void Party::offer(int agentId) {
+    mAgentIdOffers.push_back(agentId);
+    if (mState == State::Waiting) {
+        mState = State::CollectingOffers;
+        mStepsTimer++;
+    }
 }
