@@ -2,9 +2,53 @@
 #include "JoinPolicy.h"
 #include <algorithm>
 
-Party::Party(int id, string name, int mandates, JoinPolicy *jp) : mId(id), mName(name), mMandates(mandates), mJoinPolicy(jp), mState(Waiting), mStepsTimer(0)
+Party::Party(int id, string name, int mandates, JoinPolicy *jp) : mId(id), mName(name), mMandates(mandates), mState(Waiting), mStepsTimer(0), mAgentIdOffers(), mJoinPolicy(jp)
 {
     // You can change the implementation of the constructor, but not the signature!
+}
+
+Party::~Party()
+{
+    delete mJoinPolicy;
+}
+
+Party::Party(const Party &other) : mId(other.mId), mName(other.mName), mMandates(other.mMandates), mState(other.mState), mStepsTimer(other.mStepsTimer), mAgentIdOffers(other.mAgentIdOffers), mJoinPolicy(
+        nullptr)
+{
+    this->mJoinPolicy = other.mJoinPolicy->clone();
+}
+
+Party &Party::operator=(const Party &other)
+{
+    if (this != &other) {
+        this->mId = other.mId;
+        this->mName = other.mName;
+        this->mMandates = other.mMandates;
+        this->mState = other.mState;
+        this->mStepsTimer = other.mStepsTimer;
+        this->mAgentIdOffers = other.mAgentIdOffers;
+        delete mJoinPolicy;
+        this->mJoinPolicy = other.mJoinPolicy->clone();
+    }
+    return *this;
+}
+
+Party::Party(Party &&other) noexcept : mId(other.mId), mName(other.mName), mMandates(other.mMandates), mState(other.mState), mStepsTimer(other.mStepsTimer), mAgentIdOffers(other.mAgentIdOffers), mJoinPolicy(other.mJoinPolicy)
+{
+    other.mJoinPolicy = nullptr;
+}
+
+Party& Party::operator=(Party &&other)
+{
+    this->mId = other.mId;
+    this->mName = other.mName;
+    this->mMandates = other.mMandates;
+    this->mState = other.mState;
+    this->mStepsTimer = other.mStepsTimer;
+    this->mAgentIdOffers = other.mAgentIdOffers;
+    delete mJoinPolicy;
+    this->mJoinPolicy = other.mJoinPolicy->clone();
+    return *this;
 }
 
 State Party::getState() const
@@ -22,7 +66,7 @@ int Party::getMandates() const
     return mMandates;
 }
 
-const string & Party::getName() const
+const string& Party::getName() const
 {
     return mName;
 }

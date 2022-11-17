@@ -24,7 +24,6 @@ int EdgeWeightSelectionPolicy::select(Simulation &s, int sourcePartyId, const st
     int maxWeight = 0;
     int maxPartyWeight = -1;
     for (int partyId : partiesId) {
-        const Party& party = s.getParty(partyId);
         int weight = s.getGraph().getEdgeWeight(partyId, sourcePartyId);
         if (maxWeight < weight) {
             maxWeight = weight;

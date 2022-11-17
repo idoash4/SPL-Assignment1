@@ -10,10 +10,10 @@ public:
 
 class MandatesSelectionPolicy: public SelectionPolicy{
     MandatesSelectionPolicy* clone() const;
-    int select(Simulation &s, int sourcePartyId, const std::vector<int> &partiesId);
+    virtual int select(Simulation &s, int sourcePartyId, const std::vector<int> &partiesId);
 };
 
 class EdgeWeightSelectionPolicy: public SelectionPolicy{
     EdgeWeightSelectionPolicy* clone() const;
-    int select(Simulation &s, int sourcePartyId, const std::vector<int> &partiesId);
+    virtual int select(Simulation &s, int sourcePartyId, const std::vector<int> &partiesId);
 };

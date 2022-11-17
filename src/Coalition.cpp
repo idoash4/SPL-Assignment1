@@ -2,7 +2,7 @@
 #include "Simulation.h"
 #include <algorithm>
 
-Coalition::Coalition(int id, int partyId, int agentId) : mCoalitionId(id)
+Coalition::Coalition(int id, int partyId, int agentId) : mCoalitionId(id), mPartiesId(), mAgentsId()
 {
     mPartiesId.push_back(partyId);
     mAgentsId.push_back(agentId);

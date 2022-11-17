@@ -1,9 +1,9 @@
 #include "Simulation.h"
 #include "SelectionPolicy.h"
+#include <stdexcept>
 
-Simulation::Simulation(Graph graph, vector<Agent> agents) : mGraph(graph), mAgents(agents)
+Simulation::Simulation(Graph graph, vector<Agent> agents) : mGraph(graph), mAgents(agents), mCoalitions()
 {
-    // You can change the implementation of the constructor, but not the signature!
     for (unsigned int i = 0; i < agents.size(); ++i) {
         mCoalitions.emplace_back(i, agents[i].getPartyId(), agents[i].getId());
     }
@@ -27,33 +27,29 @@ bool Simulation::shouldTerminate() const
     return mGraph.hasAllJoined();
 }
 
-const Graph &Simulation::getGraph() const
+const Graph& Simulation::getGraph() const
 {
     return mGraph;
 }
 
-const vector<Agent> &Simulation::getAgents() const
+const vector<Agent>& Simulation::getAgents() const
 {
     return mAgents;
 }
 
-const Party &Simulation::getParty(int partyId) const
+const Party& Simulation::getParty(int partyId) const
 {
     return mGraph.getParty(partyId);
 }
 
-const Coalition &Simulation::getCoalition(int coalitionId) const
-{
-    return mCoalitions[coalitionId];
-}
-
-const Coalition &Simulation::getCoalitionByAgent(int agentId) const
+const Coalition& Simulation::getCoalitionByAgent(int agentId) const
 {
     for (const Coalition& coalition : mCoalitions) {
         if (coalition.isAgentInCoalition(agentId)) {
             return coalition;
         }
     }
+    throw std::invalid_argument("Received invalid agent id (not in coalition)");
 }
 
 void Simulation::addPartyToCoalition(int partyId, int agentId)

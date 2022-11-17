@@ -12,11 +12,11 @@ public:
 class MandatesJoinPolicy : public JoinPolicy {
 public:
     MandatesJoinPolicy* clone() const;
-    int select(Simulation &s, const std::vector<int> &agentIdOffers);
+    virtual int select(Simulation &s, const std::vector<int> &agentIdOffers);
 };
 
 class LastOfferJoinPolicy : public JoinPolicy {
 public:
     LastOfferJoinPolicy* clone() const;
-    int select(Simulation &s, const std::vector<int> &agentIdOffers);
+    virtual int select(Simulation &s, const std::vector<int> &agentIdOffers);
 };
