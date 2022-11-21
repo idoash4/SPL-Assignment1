@@ -46,8 +46,8 @@ Party& Party::operator=(Party &&other)
     this->mState = other.mState;
     this->mStepsTimer = other.mStepsTimer;
     this->mCoalitionOffers = other.mCoalitionOffers;
-    delete mJoinPolicy;
-    this->mJoinPolicy = other.mJoinPolicy->clone();
+    this->mJoinPolicy = other.mJoinPolicy;
+    other.mJoinPolicy = nullptr;
     return *this;
 }
 
